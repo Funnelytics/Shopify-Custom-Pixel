@@ -326,13 +326,11 @@ analytics.subscribe("clicked", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     if (!event.data.element.href && !event.data.element.id) {
       return;
     }
@@ -373,13 +371,11 @@ analytics.subscribe("form_submitted", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const element = event.data.element;
     const formAction = element.action;
     const emailRegex = /email/i;
@@ -434,13 +430,11 @@ analytics.subscribe("product_viewed", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const variantInfo = event.data.productVariant;
     const eventInfo = {
       variantId: variantInfo.id,
@@ -485,13 +479,11 @@ analytics.subscribe("cart_viewed", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
 
     const eventInfo = {};
 
@@ -527,13 +519,11 @@ analytics.subscribe("collection_viewed", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const collection = event.data.collection;
     const eventInfo = {
       collectionTitle: collection.title,
@@ -574,13 +564,11 @@ analytics.subscribe("search_submitted", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const searchResult = event.data.searchResult;
     const eventInfo = {
       searchQuery: searchResult.query,
@@ -620,13 +608,11 @@ analytics.subscribe("product_added_to_cart", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const cartLineItem = event.data.cartLine;
     const eventInfo = {
       price: cartLineItem.cost.totalAmount.amount,
@@ -673,13 +659,11 @@ analytics.subscribe("product_removed_from_cart", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const cartLineItem = event.data.cartLine;
     const eventInfo = {
       price: cartLineItem.cost.totalAmount.amount,
@@ -726,13 +710,11 @@ analytics.subscribe("checkout_started", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const checkout = event.data.checkout;
     const eventInfo = {
       email: checkout.email,
@@ -776,13 +758,11 @@ analytics.subscribe("checkout_address_info_submitted", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const checkout = event.data.checkout;
     const eventInfo = {
       email: checkout.email,
@@ -826,13 +806,11 @@ analytics.subscribe("checkout_contact_info_submitted", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const checkout = event.data.checkout;
     const eventInfo = {
       email: checkout.email,
@@ -843,6 +821,7 @@ analytics.subscribe("checkout_contact_info_submitted", (event) => {
       checkoutSubTotal: checkout.subtotalPrice.amount,
       checkoutItems: checkout.lineItems.length,
     };
+
     let actionAttributes = Object.assign(
       {},
       pageInfo,
@@ -875,13 +854,11 @@ analytics.subscribe("checkout_shipping_info_submitted", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const checkout = event.data.checkout;
     const eventInfo = {
       email: checkout.email,
@@ -925,13 +902,11 @@ analytics.subscribe("payment_info_submitted", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     const checkout = event.data.checkout;
     const eventInfo = {
       email: checkout.email,
@@ -1010,14 +985,11 @@ analytics.subscribe("checkout_completed", (event) => {
 
       // Get customer and cart data once
       const customer = safeGet(window, "init.data.customer", {});
-      const cart = safeGet(window, "init.data.cart", {});
+      const cart = init?.data?.cart;
       const cartData = cart ? {
-            cartTotalQuantity: safeGet(cart, "totalQuantity"),
-            cartTotalCost: safeGet(cart, "cost.totalAmount.amount"),
-            cartTotalCostCents: safeGet(cart, "cost.totalAmount.amount") ? Math.round(cart.cost.totalAmount.amount * 100) : null,
-            cartCurrency: safeGet(cart, "cost.totalAmount.currencyCode"),
-          }
-        : {};
+        cartTotalQuantity: cart?.totalQuantity ?? 0,
+        cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+      } : {};
 
       // Process each line item
       checkoutItems.forEach((item) => {
@@ -1125,13 +1097,11 @@ analytics.subscribe("customFunnelyticsEvent", (event) => {
       pagePath: pageHref.pathname.replace(/\/?(\?|#|$)/, "/$1"),
     };
     const customer = init.data.customer;
-    const cart = init.data.cart;
-    const cartData = {
-      cartTotalQuantity: cart?.totalQuantity,
-      cartTotalCost: cart?.cost.totalAmount.amount,
-      cartTotalCostCents: Math.round(cart?.cost.totalAmount.amount * 100),
-      cartCurrency: cart?.cost.totalAmount.currencyCode,
-    };
+    const cart = init?.data?.cart;
+    const cartData = cart ? {
+      cartTotalQuantity: cart?.totalQuantity ?? 0,
+      cartTotalCost: cart?.cost?.totalAmount?.amount ?? "0"
+    } : {};
     let actionAttributes = Object.assign(
       {},
       pageInfo,
