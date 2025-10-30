@@ -335,8 +335,11 @@ analytics.subscribe("clicked", (event) => {
       return;
     }
     const clickType = event.data.element.href ? "link" : "element";
+    const eventName = clickType === "link" ? "Link Click" : "Button Click";
+    const eventOrigin = 'shopifyClicked';
     const eventInfo = {
       clickType,
+      eventOrigin,
       ...event.data.element,
     };
     let actionAttributes = Object.assign(
@@ -346,7 +349,7 @@ analytics.subscribe("clicked", (event) => {
       cartData,
       eventInfo
     );
-    window.funnelytics.events.trigger(event.name, actionAttributes);
+    window.funnelytics.events.trigger(eventName, actionAttributes);
   }, 200);
 });
 
@@ -386,10 +389,11 @@ analytics.subscribe("form_submitted", (event) => {
       acc[item.name] = item.value;
       return acc;
     }, {});
-
+    const formOrigin = 'shopifyFormSubmitted';
     const eventInfo = {
       formId: event.data.element.id,
       formAction,
+      formOrigin,
       ...formDetails,
     };
     let actionAttributes = Object.assign(
@@ -399,7 +403,7 @@ analytics.subscribe("form_submitted", (event) => {
       cartData,
       eventInfo
     );
-    window.funnelytics.events.trigger(event.name, actionAttributes);
+    window.funnelytics.events.trigger("Form Completed", actionAttributes);
   }, 200);
 });
 
@@ -634,7 +638,7 @@ analytics.subscribe("product_added_to_cart", (event) => {
       cartData,
       eventInfo
     );
-    window.funnelytics.events.trigger(event.name, actionAttributes);
+    window.funnelytics.events.trigger('__add_to_cart__', actionAttributes);
   }, 200);
 });
 
