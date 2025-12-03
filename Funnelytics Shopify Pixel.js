@@ -412,10 +412,10 @@ analytics.subscribe("clicked", (event) => {
     }
     const clickType = event.data.element.href ? "link" : "element";
     const eventName = clickType === "link" ? "Link Click" : "Button Click";
-    const eventOrigin = 'shopifyClicked';
+    const __dataOrigin__ = 'shopify';
     const eventInfo = {
       clickType,
-      eventOrigin,
+      __dataOrigin__,
       ...event.data.element,
     };
     let actionAttributes = Object.assign(
@@ -465,11 +465,11 @@ analytics.subscribe("form_submitted", (event) => {
       acc[item.name] = item.value;
       return acc;
     }, {});
-    const formOrigin = 'shopifyFormSubmitted';
+    const __dataOrigin__ = 'shopify';
     const eventInfo = {
       formId: event.data.element.id,
       formAction,
-      formOrigin,
+      __dataOrigin__,
       ...formDetails,
     };
     let actionAttributes = Object.assign(
