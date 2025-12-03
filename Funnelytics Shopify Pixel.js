@@ -79,20 +79,20 @@ const setShopifyFLCookie = function (payload, session) {
   }
 };
 
-// adaptation of the init function rewrote with fetch
+// adaptation of the initialize function rewritten with fetch
 
 const funnelyticsDefine = async function (payload) {
   if (!funnelytics.projects.shouldTrackProject()) {
     return;
   }
 
-  if (!funnelytics.client.isBot()) {
+  if (!isUserBot()) {
     const n = {
       project: funnelyticsProjectID,
       page: payload.page,
       device: window.matchMedia("(pointer:coarse)").matches ? "mobile"
         : "desktop",
-      //metadata: getFingerprintingData(),
+      metadata: getShopifyFingerprintingData(),
     };
 
     if (funnelytics.isSPA === true) {
@@ -125,7 +125,7 @@ const funnelyticsDefine = async function (payload) {
 
 //adaptation of the fetchSettings funcion
 const retrieveSettings = async function () {
-  if (funnelytics.client.isBot()) {
+  if (isUserBot()) {
     return;
   }
 
@@ -204,7 +204,9 @@ const recordStep = async function (trackedPageURL, referringURL, payload) {
     return;
   }
 
-  if (!funnelytics.client.isBot()) {
+  if (isUserBot()) {
+    return;
+  }
     if (funnelytics.session) {
       if (funnelytics.isSPA && funnelytics.steps.length > 0) {
         referrer = funnelytics.steps[funnelytics.steps.length - 1];
@@ -243,7 +245,81 @@ const recordStep = async function (trackedPageURL, referringURL, payload) {
       funnelyticsDefine(payload);
     }
   }
-};
+
+//adapatation of the isBot function
+function isUserBot() {
+        const isSuspiciousScreenSize = (init.context.window.screen.width === 2000 && init.context.window.screen.height === 2000) || init.context.window.screen.height > 5000;
+        if (isSuspiciousScreenSize) {
+          return true;
+        }
+
+        const maybeFBBotPattern = /mozilla\/5\.0 \(linux; android \d+; [a-z]\) applewebkit/i;
+        const isFBWeirdScreenSize = init.context.window.innerWidth === 500 && init.context.window.screen.width < init.context.window.innerWidth;        
+
+
+
+        /**
+         * Trying to block FB bots by specific useragent, timezone and window size
+         */
+        if (maybeFBBotPattern.test(init.context.navigator.userAgent) && isFBWeirdScreenSize) {
+          return true;
+        }
+
+        const defaultPatterns =  [
+          "headless",
+          "\\.com",
+          "^[^ ]{50,}$",
+          "^[\\w \\.\\-\\(?:\\):]+(?:/v?\\d+(?:\\.\\d+)?(?:\\.\\d{1,10})*?)?(?:,|$)",
+          "funnelyticsbot",
+          "googlebot",
+          "^facebook",
+          "bot|spider|crawl|http|lighthouse",
+          "robot",
+          "scan",
+          "chrome-lighthouse",
+          "chomeframe",
+          "^bot",
+        ];
+        const extendedPatterns = [
+          ...defaultPatterns,
+          "(?<!(?:lib))http",
+          "(?<! cu)bot(?:[^\\w]|_|$)",
+          "(?<! (?:channel/|google/))google(?!(app|/google| pixel))",
+        ];
+
+        let pattern;
+        try {
+          pattern = new RegExp(extendedPatterns.join("|"), "i");
+        } catch(error) {
+          pattern = new RegExp(defaultPatterns.join("|"), "i");
+        }
+
+        return Boolean(init.context.navigator.userAgent) && pattern.test(init.context.navigator.userAgent);
+      }
+
+//adaptation of the getFingerprintingData
+  function getShopifyFingerprintingData() {
+
+    const data = {
+      userAgent: init.context.navigator.userAgent,
+      screenWidth: init.context.window.screen.width,
+      screenHeight: init.context.window.screen.height,
+      colorDepth: init.context.window.screen.colorDepth,
+      pixelDepth: init.context.window.screen.pixelDepth,
+      language: init.context.navigator.language,
+      cookiesEnabled: init.context.navigator.cookieEnabled,
+      viewportWidth: init.context.window.innerWidth,
+      viewportHeight: init.context.window.innerHeight,
+    };
+
+    return Object.entries(data).reduce((hash, [key, value]) => {
+      if (value !== null && value !== undefined) {
+        hash[key] = value.toString();
+      }
+
+      return hash;
+    }, {});
+  }
 
 /*========================================
 
@@ -335,8 +411,11 @@ analytics.subscribe("clicked", (event) => {
       return;
     }
     const clickType = event.data.element.href ? "link" : "element";
+    const eventName = clickType === "link" ? "Link Click" : "Button Click";
+    const __dataOrigin__ = 'shopify';
     const eventInfo = {
       clickType,
+      __dataOrigin__,
       ...event.data.element,
     };
     let actionAttributes = Object.assign(
@@ -346,7 +425,7 @@ analytics.subscribe("clicked", (event) => {
       cartData,
       eventInfo
     );
-    window.funnelytics.events.trigger(event.name, actionAttributes);
+    window.funnelytics.events.trigger(eventName, actionAttributes);
   }, 200);
 });
 
@@ -386,10 +465,11 @@ analytics.subscribe("form_submitted", (event) => {
       acc[item.name] = item.value;
       return acc;
     }, {});
-
+    const __dataOrigin__ = 'shopify';
     const eventInfo = {
       formId: event.data.element.id,
       formAction,
+      __dataOrigin__,
       ...formDetails,
     };
     let actionAttributes = Object.assign(
@@ -399,7 +479,7 @@ analytics.subscribe("form_submitted", (event) => {
       cartData,
       eventInfo
     );
-    window.funnelytics.events.trigger(event.name, actionAttributes);
+    window.funnelytics.events.trigger("Form Completed", actionAttributes);
   }, 200);
 });
 
@@ -634,7 +714,7 @@ analytics.subscribe("product_added_to_cart", (event) => {
       cartData,
       eventInfo
     );
-    window.funnelytics.events.trigger(event.name, actionAttributes);
+    window.funnelytics.events.trigger('__add_to_cart__', actionAttributes);
   }, 200);
 });
 
