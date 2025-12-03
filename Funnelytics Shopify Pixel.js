@@ -79,14 +79,14 @@ const setShopifyFLCookie = function (payload, session) {
   }
 };
 
-// adaptation of the init function rewrote with fetch
+// adaptation of the init function rewritten with fetch
 
 const funnelyticsDefine = async function (payload) {
   if (!funnelytics.projects.shouldTrackProject()) {
     return;
   }
 
-  if (!funnelytics.client.isBot()) {
+  if (botChecker()) {
     const n = {
       project: funnelyticsProjectID,
       page: payload.page,
@@ -125,7 +125,7 @@ const funnelyticsDefine = async function (payload) {
 
 //adaptation of the fetchSettings funcion
 const retrieveSettings = async function () {
-  if (funnelytics.client.isBot()) {
+  if (botChecker()) {
     return;
   }
 
@@ -204,7 +204,7 @@ const recordStep = async function (trackedPageURL, referringURL, payload) {
     return;
   }
 
-  if (!funnelytics.client.isBot()) {
+  if (!botChecker()) {
     if (funnelytics.session) {
       if (funnelytics.isSPA && funnelytics.steps.length > 0) {
         referrer = funnelytics.steps[funnelytics.steps.length - 1];
@@ -244,6 +244,57 @@ const recordStep = async function (trackedPageURL, referringURL, payload) {
     }
   }
 };
+
+//adapatation of the isBot function
+function botChecker() {
+        const isSuspiciousScreenSize = (init.context.window.screen.width === 2000 && init.context.window.screen.height === 2000) || init.context.window.screen.height > 5000;
+        if (isSuspiciousScreenSize) {
+          return true;
+        }
+
+        const maybeFBBotPattern = /mozilla\/5\.0 \(linux; android \d+; [a-z]\) applewebkit/i;
+        const isFBWeirdScreenSize = init.context.window.innerWidth === 500 && init.contextwindow.screen.width < init.context.window.innerWidth;        
+
+
+
+        /**
+         * Trying to block FB bots by specific useragent, timezone and window size
+         */
+        if (maybeFBBotPattern.test(navigator.userAgent) && isFBWeirdScreenSize) {
+          return true;
+        }
+
+        const defaultPatterns =  [
+          "headless",
+          "\\.com",
+          "^[^ ]{50,}$",
+          "^[\\w \\.\\-\\(?:\\):]+(?:/v?\\d+(?:\\.\\d+)?(?:\\.\\d{1,10})*?)?(?:,|$)",
+          "funnelyticsbot",
+          "googlebot",
+          "^facebook",
+          "bot|spider|crawl|http|lighthouse",
+          "robot",
+          "scan",
+          "chrome-lighthouse",
+          "chomeframe",
+          "^bot",
+        ];
+        const extendedPatterns = [
+          ...defaultPatterns,
+          "(?<!(?:lib))http",
+          "(?<! cu)bot(?:[^\\w]|_|$)",
+          "(?<! (?:channel/|google/))google(?!(app|/google| pixel))",
+        ];
+
+        let pattern;
+        try {
+          pattern = new RegExp(extendedPatterns.join("|"), "i");
+        } catch(error) {
+          pattern = new RegExp(defaultPatterns.join("|"), "i");
+        }
+
+        return Boolean(init.context.navigator.userAgent) && pattern.test(init.context.navigator.userAgent);
+      }
 
 /*========================================
 
